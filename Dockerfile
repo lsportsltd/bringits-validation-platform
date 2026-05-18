@@ -8,7 +8,7 @@ FROM base AS dependencies
 COPY package*.json ./
 COPY apps/backend/package*.json ./apps/backend/
 COPY apps/web/package*.json ./apps/web/
-RUN npm ci --ignore-scripts
+RUN npm ci --ignore-scripts --include-workspace-root
 
 # Copy Prisma schema and generate client
 COPY apps/backend/prisma ./apps/backend/prisma
