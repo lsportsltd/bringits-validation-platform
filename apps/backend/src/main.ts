@@ -21,13 +21,14 @@ function resolveDATABASE_URL() {
 
 // Construct CONN_LINK_API_URL / CONN_LINK_API_RO_URL from parts (cloud deployment)
 function resolveConnURLs() {
+  const linkDb = process.env.PG_LINK_DB_NAME || 'link';
   if (!process.env.CONN_LINK_API_URL) {
     const host = process.env.DB_POSTGRES_DATA_ENDPOINT;
     const port = process.env['DB_POSTGRES_DATA_PORT'] || '5432';
     const user = process.env.DB_POSTGRES_DATA_USERNAME;
     const pass = process.env.DB_POSTGRES_DATA_PASSWORD;
     if (host && user && pass) {
-      process.env.CONN_LINK_API_URL = `postgresql://${user}:${pass}@${host}:${port}/link?sslmode=require`;
+      process.env.CONN_LINK_API_URL = `postgresql://${user}:${pass}@${host}:${port}/${linkDb}?sslmode=require`;
     }
   }
   if (!process.env.CONN_LINK_API_RO_URL) {
@@ -36,7 +37,7 @@ function resolveConnURLs() {
     const user = process.env.DB_POSTGRES_DATA_USERNAME_READ;
     const pass = process.env.DB_POSTGRES_DATA_PASSWORD_READ;
     if (host && user && pass) {
-      process.env.CONN_LINK_API_RO_URL = `postgresql://${user}:${pass}@${host}:${port}/link?sslmode=require`;
+      process.env.CONN_LINK_API_RO_URL = `postgresql://${user}:${pass}@${host}:${port}/${linkDb}?sslmode=require`;
     }
   }
 }
