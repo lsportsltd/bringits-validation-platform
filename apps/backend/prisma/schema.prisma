@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CommandTemplate {
+  id             String    @id @default(uuid())
+  name           String
+  description    String?
+  type           String
+  action         String
+  config         Json
+  expect         Json?
+  timeoutSeconds Int       @default(30)
+  tags           String[]  @default([])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  flowCommands   FlowCommand[]
+  commandRuns    CommandRun[]
+
+  @@map("command_templates")
+}
+
+model Flow {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  env         String    @default("qa")
+  variables   Json?
+  tags        String[]  @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  commands    FlowCommand[]
+  runs        FlowRun[]
+
+  @@map("flows")
+}
+
+model FlowCommand {
+  id                String           @id @default(uuid())
+  flowId            String
+  commandTemplateId String?
+  name              String
+  type              String
+  action            String
+  orderIndex        Int
+  config            Json
+  expect            Json?
+  timeoutSeconds    Int              @default(30)
+  continueOnFailure Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  flow              Flow             @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  commandTemplate   CommandTemplate? @relation(fields: [commandTemplateId], references: [id])
+
+  @@map("flow_commands")
+}
+
+model CommandRun {
+  id                String           @id @default(uuid())
+  commandTemplateId String?
+  flowRunId         String?
+  commandName       String
+  type              String
+  action            String
+  status            String
+  correlationId     String
+  startedAt         DateTime
+  finishedAt        DateTime?
+  durationMs        Int?
+  configSnapshot    Json
+  expectSnapshot    Json?
+  evidence          Json?
+  errorMessage      String?
+  createdAt         DateTime         @default(now())
+
+  commandTemplate   CommandTemplate? @relation(fields: [commandTemplateId], references: [id])
+  flowRun           FlowRun?         @relation(fields: [flowRunId], references: [id])
+  evidenceItems     EvidenceItem[]
+
+  @@map("command_runs")
+}
+
+model FlowRun {
+  id                 String       @id @default(uuid())
+  flowId             String
+  flowName           String
+  env                String
+  status             String
+  correlationId      String
+  variablesSnapshot  Json?
+  startedAt          DateTime
+  finishedAt         DateTime?
+  durationMs         Int?
+  failedCommandName  String?
+  failureBoundary    String?
+  summary            String?
+  report             Json?
+  createdAt          DateTime     @default(now())
+
+  flow               Flow         @relation(fields: [flowId], references: [id])
+  commandRuns        CommandRun[]
+  evidenceItems      EvidenceItem[]
+
+  @@map("flow_runs")
+}
+
+model EvidenceItem {
+  id           String      @id @default(uuid())
+  commandRunId String
+  flowRunId    String?
+  sourceType   String
+  sourceName   String
+  payload      Json
+  createdAt    DateTime    @default(now())
+
+  commandRun   CommandRun  @relation(fields: [commandRunId], references: [id])
+  flowRun      FlowRun?    @relation(fields: [flowRunId], references: [id])
+
+  @@map("evidence_items")
+}

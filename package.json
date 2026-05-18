@@ -1,0 +1,15 @@
+{
+  "name": "bringits-validation-platform",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/web"
+  ],
+  "scripts": {
+    "backend": "npm run start:dev --workspace=apps/backend",
+    "web": "npm run dev --workspace=apps/web",
+    "build:backend": "npm run build --workspace=apps/backend",
+    "build:web": "npm run build --workspace=apps/web"
+  }
+}

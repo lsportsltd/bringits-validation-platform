@@ -1,0 +1,11 @@
+node_modules
+apps/*/node_modules
+apps/backend/dist
+apps/web/.next
+apps/web/out
+**/*.log
+**/.env
+**/.env.local
+.git
+.gitignore
+README.md

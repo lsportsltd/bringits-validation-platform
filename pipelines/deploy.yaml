@@ -1,0 +1,44 @@
+#deploy.yaml
+resources:
+  repositories:
+    - repository: pipeline-templates
+      type: github
+      name: lsportsltd/devops-pipeline-templates
+      endpoint: lsportsltd
+    - repository: manifests
+      type: github
+      name: lsportsltd/devops-manifests
+      endpoint: lsportsltd
+    - repository: deployments
+      type: github
+      name: lsportsltd/shared-deployments
+      endpoint: lsportsltd
+      trigger:
+        branches:
+          include:
+            - main
+        paths:
+          include:
+            - lsports_infra/dev/eu-west-1/bringits-validation-platform
+
+trigger:
+  - main
+
+stages:
+  - template: kubernetes/ci-docker.yaml@pipeline-templates
+    parameters:
+      serviceName: bringits-validation-platform
+      group: data
+      team: link
+      domain: link
+      product: bringits
+      dockerUT: 'false'
+      cloud: gcp
+      multiArchBuild: 'true'
+
+  - template: kubernetes/deploy.yml@pipeline-templates
+    parameters:
+      serviceName: bringits-validation-platform
+      Safety: true
+      cloud: gcp
+      bringits: true
