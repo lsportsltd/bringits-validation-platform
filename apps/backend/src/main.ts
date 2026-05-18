@@ -41,11 +41,13 @@ function resolveConnURLs() {
   }
 }
 
-// Construct REDIS_*_URL from individual GCP secret parts when not set locally
+// Construct REDIS_*_URL from individual GCP secret parts (same pattern as link-api)
+// link-api uses DB_REDIS_<NAME>_ENDPOINT + DB_REDIS_<NAME>_PORT separately
 function resolveRedisURLs() {
   const pairs: [string, string, string][] = [
-    ['REDIS_LINK_CLUSTERED_URL',        'DB_REDIS_LINK-CLUSTERED_ENDPOINT',        'DB_REDIS_LINK-CLUSTERED_PORT'],
-    ['REDIS_BLACK_WIDOW_CLUSTERED_URL', 'DB_REDIS_BLACK-WIDOW-CLUSTERED_ENDPOINT', 'DB_REDIS_BLACK-WIDOW-CLUSTERED_PORT'],
+    ['REDIS_LINK_CLUSTERED_URL',        'DB_REDIS_LINK-CLUSTERED_ENDPOINT',          'DB_REDIS_LINK-CLUSTERED_PORT'],
+    ['REDIS_BLACK_WIDOW_CLUSTERED_URL', 'DB_REDIS_BLACK-WIDOW-CLUSTERED_ENDPOINT',   'DB_REDIS_BLACK-WIDOW-CLUSTERED_PORT'],
+    ['REDIS_DATA_CLUSTERED_URL',        'DB_REDIS_ROBOTS-CLUSTERED_ENDPOINT',        'DB_REDIS_ROBOTS-CLUSTERED_PORT'],
   ];
   for (const [urlKey, hostKey, portKey] of pairs) {
     if (!process.env[urlKey]) {
