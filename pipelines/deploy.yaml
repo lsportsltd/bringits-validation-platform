@@ -12,6 +12,7 @@ resources:
     - repository: deployments
       type: github
       name: lsportsltd/shared-deployments
+      ref: refs/heads/feature/add-bringits-validation-platform
       endpoint: lsportsltd
       trigger:
         branches:
