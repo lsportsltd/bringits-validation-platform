@@ -44,7 +44,6 @@ COPY --from=build-web /usr/src/app/apps/web/.next/standalone ./apps/web/.next/st
 COPY --from=build-web /usr/src/app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=build-web /usr/src/app/apps/web/public ./apps/web/public
 
-ENV NODE_ENV=production
 ENV PORT=3002
 ENV NEXT_TELEMETRY_DISABLED=1
 

@@ -109,7 +109,7 @@ async function ensureDatabase() {
   // Run migrations against the target DB
   try {
     console.log('[bootstrap] Running prisma migrate deploy...');
-    execSync('npx prisma migrate deploy', {
+    execSync('node_modules/.bin/prisma migrate deploy --schema=apps/backend/prisma/schema.prisma', {
       cwd: process.cwd(),
       stdio: 'inherit',
       env: { ...process.env },
