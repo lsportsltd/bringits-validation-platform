@@ -34,7 +34,7 @@ stages:
       product: bringits
       dockerUT: 'false'
       cloud: gcp
-      multiArchBuild: 'true'
+      multiArchBuild: 'false'
 
   - template: kubernetes/deploy.yml@pipeline-templates
     parameters:
